@@ -1,5 +1,6 @@
 ### Backend
 
+#Library imports
 import pandas as pd
 from datetime import datetime
 from datetime import timedelta
@@ -72,15 +73,10 @@ def print_tasks_on_day(df, selected_date_str, restricted_categories):
 	print("On " + selected_date_str + " you earned " + str(total_xp) + "XP")
 	print(table)
 
-### TODO:
-#Implement dropdown table for category
-#Add option to search for previous Tasks
-#Add drowdown option for common tasks
-
 ### Front end
 
+# Library imports
 import kivy
-
 from kivy.app import App
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
