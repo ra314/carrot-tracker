@@ -6,15 +6,23 @@ from datetime import datetime
 from datetime import timedelta
 from columnar import columnar
 
-df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
-df['Date'] = df['Date'].astype('datetime64[ns]')
-
 #Nothing found message
 def nothing_found():
 	print("No tasks were found with the provided contraints.")
 
+#Import df
+def f(x):
+	return datetime.strptime(x, '%d-%m-%Y %H:%M:%S')
+
+def import_df():
+	df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
+	df['Date'] = df['Date'].apply(f)
+	return df
+
+df = import_df()
+
 #Export dataframe
-def export(df):
+def export_df(df):
 	export_location = '/home/ra314/All/Academic/LeetCode/carrots.csv'
 	df.to_csv(export_location, index = False, date_format='%d-%m-%Y %H:%M:%S')
 
@@ -29,7 +37,7 @@ def add_task(df, category, description, carrot):
 	now = get_time_now()
 	df.loc[len(df)] = [now, category, description, carrot]
 	print(f"\nYou've earned {carrot}XP")
-	export(df)
+	export_df(df)
 
 #Function to calculate XP gained in a day
 def xp_per_day(df, selected_date_str, restricted_categories):
@@ -98,8 +106,7 @@ def print_tasks_on_day(df, selected_date_str, restricted_categories):
 	total_xp = 0
 
 	for row in df.iterrows():
-		curr_date_str = row[1]['Date']
-		curr_date = datetime.strptime(curr_date_str, '%d-%m-%Y %H:%M:%S')
+		curr_date = row[1]['Date']
 
 		if curr_date.date() == selected_date.date():
 			if row[1]['Category'] not in restricted_categories:
