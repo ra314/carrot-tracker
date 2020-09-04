@@ -11,12 +11,9 @@ def nothing_found():
 	print("No tasks were found with the provided contraints.")
 
 #Import df
-def f(x):
-	return datetime.strptime(x, '%d-%m-%Y %H:%M:%S')
-
 def import_df():
 	df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
-	df['Date'] = df['Date'].apply(f)
+	df['Date'] = df['Date'].apply(lambda x: datetime.strptime(x, '%d-%m-%Y %H:%M:%S'))
 	return df
 
 df = import_df()
