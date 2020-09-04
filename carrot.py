@@ -29,12 +29,19 @@ def xp_per_day(df, selected_date_str, restricted_categories):
 	return xp
 
 #Search for last n tasks by category
-def last_x_tasks_by_category(df, category, x):
-	print("Hello")
-	tasks = df[df['Category'] == category][-x:]
-	headers = ['Date', 'Description']
+def last_x_tasks(df, description, category, x):
+	#bools contains booleans where there are
+	#matches in the df with the desired description or/and category
+	if description == "":
+		bools = df['Category'] == category
+	elif category == "":
+		bools = df['Description'] == description
+	else:
+		bools = df[['Description','Category']] == [description, category]
+
+	tasks = df[['Date', 'Description','Category']][bools].dropna()[-x:]
+	headers = ['Date', 'Description', 'Category']
 	data = tasks[headers].values.tolist()
-	print(data)
 	table = columnar(data, headers, terminal_width=100)
 	print(table)
 
@@ -112,7 +119,8 @@ class MainWidget(GridLayout):
 		self.ids.input_date.text = ""
 		self.ids.input_blacklist_categories.text = ""
 
-	def last_x_tasks_by_category(self):
+	def last_x_tasks(self):
+		description = self.ids.input_description.text
 		category = self.ids.input_category.text
 		num_tasks = self.ids.input_num.text
 
@@ -121,8 +129,9 @@ class MainWidget(GridLayout):
 		else:
 			num_tasks = int(num_tasks)
 
-		last_x_tasks_by_category(df, category, num_tasks)
+		last_x_tasks(df, description, category, num_tasks)
 
+		self.ids.input_description.text = ""
 		self.ids.input_category.text = ""
 		self.ids.input_num.text = ""
 
