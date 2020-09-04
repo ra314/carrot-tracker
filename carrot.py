@@ -12,9 +12,15 @@ df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
 def nothingfound():
 	print("No tasks were found with the provided contraints.")
 
+#Get time and date, but only up to seconds
+def get_time_now():
+	now = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+	now = datetime.strptime(now, '%d-%m-%Y %H:%M:%S')
+	return now
+
 #Adding Tasks
 def add_task(df, category, description, carrot):
-	now = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+	now = get_time_now()
 	df.loc[len(df)] = [now, category, description, carrot]
 	print(f"\nYou've earned {carrot}XP")
 	df.to_csv('carrots.csv', index = False)
@@ -70,7 +76,7 @@ def xp_in_last_x_days(df, x, restricted_categories):
 		day = datetime.strptime(date, '%d-%m-%Y')
 		data.append([date, day.strftime('%A'), str(xp)])
 
-	if len(tasks) == 0:
+	if len(data) == 0:
 		nothingfound()
 		return
 
@@ -99,7 +105,7 @@ def print_tasks_on_day(df, selected_date_str, restricted_categories):
 				])
 				total_xp += row[1]['Carrot']
 
-	if len(tasks) == 0:
+	if len(data) == 0:
 		nothingfound()
 		return
 
