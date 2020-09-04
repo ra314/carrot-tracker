@@ -2,6 +2,7 @@
 
 #Library imports
 import pandas as pd
+import numpy as np
 from datetime import datetime
 from datetime import timedelta
 from columnar import columnar
@@ -38,15 +39,13 @@ def add_task(df, category, description, carrot):
 
 #Function to calculate XP gained in a day
 def xp_per_day(df, selected_date_str, restricted_categories):
-	xp = 0
 	selected_date = datetime.strptime(selected_date_str, '%d-%m-%Y')
-	for row in df.iterrows():
-		curr_date = row[1]['Date']
-		curr_category = row[1]['Category']
-		if curr_date.date() == selected_date.date():
-			if (curr_category not in restricted_categories):
-				xp += row[1]['Carrot']
-	return xp
+
+	date_bools = df['Date'].apply(lambda x: x.date() == selected_date.date())
+	category_bools = df['Category'].apply(lambda x: x not in restricted_categories)
+	aggregate_bools = np.array(date_bools) & np.array(category_bools)
+
+	return df[aggregate_bools]['Carrot'].sum()
 
 #Search for last n tasks by category
 def last_x_tasks(df, description, category, x):
