@@ -132,28 +132,49 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown  import DropDown
 
 from kivy.core.window import Window
-Window.size = (900, 900)
+Window.size = (1000,1000)
 
 # This class stores the info of .kv file
 # when it is called goes to my.kv file
 class MainWidget(GridLayout):
-	def print_tasks_on_day(self):
+	def get_blacklisted_categories(self):
+		blacklisted_categories = self.ids.input_blacklist_categories.text
+		self.ids.input_blacklist_categories.text = ""
+		return blacklisted_categories
+
+	def get_date(self):
 		date = self.ids.input_date.text
-		categories = self.ids.input_blacklist_categories.text
-		restricted_categories = categories.replace(" ","").split(",")
+		self.ids.input_date.text = ""
+		return date
+
+	def get_description(self):
+		description = self.ids.input_description.text
+		self.ids.input_description.text = ""
+		return description
+
+	def get_category(self):
+		category = self.ids.input_category.text
+		self.ids.input_category.text = ""
+
+	def get_num(self):
+		num_tasks = self.ids.input_num.text
+		self.ids.input_num.text = ""
+		return num_tasks
+
+	def print_tasks_on_day(self):
+		date = self.get_date()
+		restricted_categories = self.get_blacklisted_categories()
+		restricted_categories = restricted_categories.replace(" ","").split(",")
 
 		if date == "":
 			date = datetime.now().strftime('%d-%m-%Y')
 
 		print_tasks_on_day(df, date, restricted_categories)
 
-		self.ids.input_date.text = ""
-		self.ids.input_blacklist_categories.text = ""
-
 	def last_x_tasks(self):
-		description = self.ids.input_description.text
-		category = self.ids.input_category.text
-		num_tasks = self.ids.input_num.text
+		description = self.get_description()
+		category = self.get_category()
+		num_tasks = self.get_num()
 
 		if num_tasks == "":
 			num_tasks = 7
@@ -162,14 +183,10 @@ class MainWidget(GridLayout):
 
 		last_x_tasks(df, description, category, num_tasks)
 
-		self.ids.input_description.text = ""
-		self.ids.input_category.text = ""
-		self.ids.input_num.text = ""
-
 	def xp_in_last_x_days(self):
-		categories = self.ids.input_blacklist_categories.text
+		categories = self.get_blacklisted_categories()
 		restricted_categories = categories.replace(" ","").split(",")
-		num_days = self.ids.input_num.text
+		num_days = self.get_num()
 
 		if num_days == "":
 			num_days = 7
@@ -178,19 +195,12 @@ class MainWidget(GridLayout):
 
 		xp_in_last_x_days(df, num_days, restricted_categories)
 
-		self.ids.input_blacklist_categories.text = ""
-		self.ids.input_num.text = ""
-
 	def add_task(self):
-		description = self.ids.input_description.text
-		category = self.ids.input_category.text
-		carrots = int(self.ids.input_carrots.text)
+		description = self.get_description()
+		category = self.get_category()
+		carrots = self.get_num()
 
 		add_task(df, category, description, carrots)
-
-		self.ids.input_description.text = ""
-		self.ids.input_category.text = ""
-		self.ids.input_carrots.text = ""
 
 	pass
 

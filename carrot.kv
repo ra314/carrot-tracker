@@ -16,11 +16,6 @@
         pos_hint: {'center_x': 0.5, 'center_y': 0.705}
         size_hint: 0.95, 0.5
     TextInput:
-        id: input_carrots
-        hint_text:'Enter task reward'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
-        size_hint: 0.95, 0.5
-    TextInput:
         id: input_num
         hint_text:'Enter number (n)'
         pos_hint: {'center_x': 0.5, 'center_y': 0.705}
@@ -35,9 +30,14 @@
         hint_text:'Enter blacklisted categories'
         pos_hint: {'center_x': 0.5, 'center_y': 0.705}
         size_hint: 0.95, 0.5
+    TextInput:
+        id: input_carrots
+        hint_text:'N/A'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
+        size_hint: 0.95, 0.5
 
     Button:
-        text: 'Add task \n (args = description, category, date)'
+        text: 'Add task \n (args = description, category, date, n = carrots)'
         on_press: root.add_task()
     Button:
         text: 'Tasks done on date \n (args = date) \n (default date is today)'
