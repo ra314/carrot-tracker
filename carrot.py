@@ -9,7 +9,7 @@ from columnar import columnar
 
 #Nothing found message
 def nothing_found():
-	print("No tasks were found with the provided contraints.")
+	print("No tasks were found with the provided constraints.")
 
 #Import df
 def import_df():
@@ -155,11 +155,15 @@ class MainWidget(GridLayout):
 	def get_category(self):
 		category = self.ids.input_category.text
 		self.ids.input_category.text = ""
+		return category
 
 	def get_num(self):
 		num_tasks = self.ids.input_num.text
 		self.ids.input_num.text = ""
-		return num_tasks
+		if num_tasks == "":
+			return 0
+		else:
+			return int(num_tasks)
 
 	def print_tasks_on_day(self):
 		date = self.get_date()
@@ -176,7 +180,7 @@ class MainWidget(GridLayout):
 		category = self.get_category()
 		num_tasks = self.get_num()
 
-		if num_tasks == "":
+		if num_tasks == 0:
 			num_tasks = 7
 		else:
 			num_tasks = int(num_tasks)
@@ -188,7 +192,7 @@ class MainWidget(GridLayout):
 		restricted_categories = categories.replace(" ","").split(",")
 		num_days = self.get_num()
 
-		if num_days == "":
+		if num_days == 0:
 			num_days = 7
 		else:
 			num_days = int(num_days)
