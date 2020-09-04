@@ -98,26 +98,18 @@ def xp_in_last_x_days(df, x, restricted_categories):
 def print_tasks_on_day(df, selected_date_str, restricted_categories):
 	selected_date = datetime.strptime(selected_date_str, '%d-%m-%Y')
 	headers = ['Category', 'Description', 'Carrot']
-	data = []
-	total_xp = 0
 
-	for row in df.iterrows():
-		curr_date = row[1]['Date']
+	date_bools = df['Date'].apply(lambda x: x.date() == selected_date.date())
+	category_bools = df['Category'].apply(lambda x: x not in restricted_categories)
+	aggregate_bools = np.array(date_bools) & np.array(category_bools)
+	masked_df = df[aggregate_bools][headers]
 
-		if curr_date.date() == selected_date.date():
-			if row[1]['Category'] not in restricted_categories:
-				data.append([
-				row[1][headers[0]],
-				row[1][headers[1]],
-				str(row[1][headers[2]])
-				])
-				total_xp += row[1]['Carrot']
-
-	if len(data) == 0:
+	if len(masked_df) == 0:
 		nothing_found()
 		return
 
-	table = columnar(data, headers, terminal_width=100)
+	total_xp = masked_df['Carrot'].sum()
+	table = columnar(masked_df.values.tolist(), headers, terminal_width=100)
 	print("On " + selected_date_str + " you earned " + str(total_xp) + "XP")
 	print(table)
 
