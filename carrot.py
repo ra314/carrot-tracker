@@ -8,6 +8,10 @@ from columnar import columnar
 
 df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
 
+#Nothing found message
+def nothingfound():
+	print("No tasks were found with the provided contraints.")
+
 #Adding Tasks
 def add_task(df, category, description, carrot):
 	now = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
@@ -40,6 +44,11 @@ def last_x_tasks(df, description, category, x):
 		bools = df[['Description','Category']] == [description, category]
 
 	tasks = df[['Date', 'Description','Category']][bools].dropna()[-x:]
+
+	if len(tasks) == 0:
+		nothingfound()
+		return
+
 	headers = ['Date', 'Description', 'Category']
 	data = tasks[headers].values.tolist()
 	table = columnar(data, headers, terminal_width=100)
@@ -60,6 +69,10 @@ def xp_in_last_x_days(df, x, restricted_categories):
 		total_xp += xp;
 		day = datetime.strptime(date, '%d-%m-%Y')
 		data.append([date, day.strftime('%A'), str(xp)])
+
+	if len(tasks) == 0:
+		nothingfound()
+		return
 
 	table = columnar(data, headers)
 	print(table)
@@ -85,6 +98,10 @@ def print_tasks_on_day(df, selected_date_str, restricted_categories):
 				str(row[1][headers[2]])
 				])
 				total_xp += row[1]['Carrot']
+
+	if len(tasks) == 0:
+		nothingfound()
+		return
 
 	table = columnar(data, headers, terminal_width=100)
 	print("On " + selected_date_str + " you earned " + str(total_xp) + "XP")
