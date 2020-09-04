@@ -7,10 +7,16 @@ from datetime import timedelta
 from columnar import columnar
 
 df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
+df['Date'] = df['Date'].astype('datetime64[ns]')
 
 #Nothing found message
-def nothingfound():
+def nothing_found():
 	print("No tasks were found with the provided contraints.")
+
+#Export dataframe
+def export(df):
+	export_location = '/home/ra314/All/Academic/LeetCode/carrots.csv'
+	df.to_csv(export_location, index = False, date_format='%d-%m-%Y %H:%M:%S')
 
 #Get time and date, but only up to seconds
 def get_time_now():
@@ -23,16 +29,15 @@ def add_task(df, category, description, carrot):
 	now = get_time_now()
 	df.loc[len(df)] = [now, category, description, carrot]
 	print(f"\nYou've earned {carrot}XP")
-	df.to_csv('carrots.csv', index = False)
+	export(df)
 
 #Function to calculate XP gained in a day
 def xp_per_day(df, selected_date_str, restricted_categories):
 	xp = 0
 	selected_date = datetime.strptime(selected_date_str, '%d-%m-%Y')
 	for row in df.iterrows():
-		curr_date_str = row[1]['Date']
+		curr_date = row[1]['Date']
 		curr_category = row[1]['Category']
-		curr_date = datetime.strptime(curr_date_str, '%d-%m-%Y %H:%M:%S')
 		if curr_date.date() == selected_date.date():
 			if (curr_category not in restricted_categories):
 				xp += row[1]['Carrot']
@@ -52,7 +57,7 @@ def last_x_tasks(df, description, category, x):
 	tasks = df[['Date', 'Description','Category']][bools].dropna()[-x:]
 
 	if len(tasks) == 0:
-		nothingfound()
+		nothing_found()
 		return
 
 	headers = ['Date', 'Description', 'Category']
@@ -77,7 +82,7 @@ def xp_in_last_x_days(df, x, restricted_categories):
 		data.append([date, day.strftime('%A'), str(xp)])
 
 	if len(data) == 0:
-		nothingfound()
+		nothing_found()
 		return
 
 	table = columnar(data, headers)
@@ -106,7 +111,7 @@ def print_tasks_on_day(df, selected_date_str, restricted_categories):
 				total_xp += row[1]['Carrot']
 
 	if len(data) == 0:
-		nothingfound()
+		nothing_found()
 		return
 
 	table = columnar(data, headers, terminal_width=100)
