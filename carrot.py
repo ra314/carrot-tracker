@@ -6,7 +6,7 @@ from datetime import datetime
 from datetime import timedelta
 from columnar import columnar
 
-df = pd.read_csv('carrots.csv')
+df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
 
 #Adding Tasks
 def add_task(df, category, description, carrot):
@@ -27,6 +27,16 @@ def xp_per_day(df, selected_date_str, restricted_categories):
 			if (curr_category not in restricted_categories):
 				xp += row[1]['Carrot']
 	return xp
+
+#Search for last n tasks by category
+def last_x_tasks_by_category(df, category, x):
+	print("Hello")
+	tasks = df[df['Category'] == category][-x:]
+	headers = ['Date', 'Description']
+	data = tasks[headers].values.tolist()
+	print(data)
+	table = columnar(data, headers, terminal_width=100)
+	print(table)
 
 #Function to calculate XP gained in last x days
 def xp_in_last_x_days(df, x, restricted_categories):
@@ -102,10 +112,24 @@ class MainWidget(GridLayout):
 		self.ids.input_date.text = ""
 		self.ids.input_blacklist_categories.text = ""
 
+	def last_x_tasks_by_category(self):
+		category = self.ids.input_category.text
+		num_tasks = self.ids.input_num.text
+
+		if num_tasks == "":
+			num_tasks = 7
+		else:
+			num_tasks = int(num_tasks)
+
+		last_x_tasks_by_category(df, category, num_tasks)
+
+		self.ids.input_category.text = ""
+		self.ids.input_num.text = ""
+
 	def xp_in_last_x_days(self):
 		categories = self.ids.input_blacklist_categories.text
 		restricted_categories = categories.replace(" ","").split(",")
-		num_days = self.ids.input_num_days.text
+		num_days = self.ids.input_num.text
 
 		if num_days == "":
 			num_days = 7
@@ -115,7 +139,7 @@ class MainWidget(GridLayout):
 		xp_in_last_x_days(df, num_days, restricted_categories)
 
 		self.ids.input_blacklist_categories.text = ""
-		self.ids.input_num_days.text = ""
+		self.ids.input_num.text = ""
 
 	def add_task(self):
 		description = self.ids.input_description.text
