@@ -13,7 +13,7 @@ def nothing_found():
 
 #Import df
 def import_df():
-	df = pd.read_csv('/home/ra314/All/Academic/LeetCode/carrots.csv')
+	df = pd.read_csv('/home/ra314/All/Programming/carrots.csv')
 	df['Date'] = df['Date'].apply(lambda x: datetime.strptime(x, '%d-%m-%Y %H:%M:%S'))
 	return df
 
@@ -21,7 +21,7 @@ df = import_df()
 
 #Export dataframe
 def export_df(df):
-	export_location = '/home/ra314/All/Academic/LeetCode/carrots.csv'
+	export_location = '/home/ra314/All/Programming/carrots.csv'
 	df.to_csv(export_location, index = False, date_format='%d-%m-%Y %H:%M:%S')
 
 #Get time and date, but only up to seconds
@@ -54,17 +54,17 @@ def last_x_tasks(df, description, category, x):
 	if description == "":
 		bools = df['Category'] == category
 	elif category == "":
-		bools = df['Description'] == description
+		bools = df['Description'].apply(lambda x: description in x)
 	else:
 		bools = df[['Description','Category']] == [description, category]
 
-	tasks = df[['Date', 'Description','Category']][bools].dropna()[-x:]
+	headers = ['Date', 'Description', 'Category', 'Carrot']
+	tasks = df[headers][bools].dropna()[-x:]
 
 	if len(tasks) == 0:
 		nothing_found()
 		return
 
-	headers = ['Date', 'Description', 'Category']
 	data = tasks[headers].values.tolist()
 	table = columnar(data, headers, terminal_width=100)
 	print(table)
@@ -97,7 +97,7 @@ def xp_in_last_x_days(df, x, restricted_categories):
 #Function to print tasks done on a certain day
 def print_tasks_on_day(df, selected_date_str, restricted_categories):
 	selected_date = datetime.strptime(selected_date_str, '%d-%m-%Y')
-	headers = ['Category', 'Description', 'Carrot']
+	headers = ['Date', 'Description', 'Category', 'Carrot']
 
 	date_bools = df['Date'].apply(lambda x: x.date() == selected_date.date())
 	category_bools = df['Category'].apply(lambda x: x not in restricted_categories)
@@ -122,6 +122,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.dropdown  import DropDown
+from kivy.uix.spinner import Spinner
 
 from kivy.core.window import Window
 Window.size = (1000,1000)
