@@ -114,6 +114,11 @@ def print_tasks_on_day(df, selected_date_str, restricted_categories):
 	print("On " + selected_date_str + " you earned " + str(total_xp) + "XP")
 	print(table)
 
+#Function to find a task by index
+def find_task_by_index(task_index):
+	slice = df.loc[task_index]
+	return slice[1], slice[2], slice[3]
+
 ### Front end
 
 # Library imports
@@ -147,22 +152,32 @@ class MainWidget(GridLayout):
 		return description
 
 	def get_category(self):
+		category = self.ids.dropdown_category.text
 		self.ids.dropdown_category.text = "Select Category"
 		return self.ids.dropdown_category.text
 
 	def get_num(self):
-		num_tasks = self.ids.input_num.text
+		num = self.ids.input_num.text
 		self.ids.input_num.text = ""
-		if num_tasks == "":
-			return 0
+		if num == "":
+			return num
 		else:
-			return int(num_tasks)
+			return int(num)
+
+	def get_task_index(self):
+		num = self.ids.input_task_index.text
+		self.ids.input_task_index.text = ""
+		if num == "":
+			return num
+		else:
+			return int(num)
 
 	def print_tasks_on_day(self):
 		date = self.get_date()
 		restricted_categories = self.get_blacklisted_categories()
 		restricted_categories = restricted_categories.replace(" ","").split(",")
 
+		#Default Behaviour
 		if date == "":
 			date = datetime.now().strftime('%d-%m-%Y')
 
@@ -173,7 +188,8 @@ class MainWidget(GridLayout):
 		category = self.get_category()
 		num_tasks = self.get_num()
 
-		if num_tasks == 0:
+		#Default behaviour
+		if num_tasks == "":
 			num_tasks = 7
 		else:
 			num_tasks = int(num_tasks)
@@ -185,7 +201,8 @@ class MainWidget(GridLayout):
 		restricted_categories = categories.replace(" ","").split(",")
 		num_days = self.get_num()
 
-		if num_days == 0:
+		#Default behaviour
+		if num_days == "":
 			num_days = 7
 		else:
 			num_days = int(num_days)
@@ -198,10 +215,26 @@ class MainWidget(GridLayout):
 		carrots = self.get_num()
 
 		#Preventing adding tasks without having filled all fields
-		if False in (description, category, carrots): return
-		if category = "Select Category": return
+		if description == "": return
+		if carrots == "": return
+		if category == "Select Category": return
 
 		add_task(df, category, description, carrots)
+
+	def find_task_by_index(self):
+		task_index = self.get_task_index()
+
+		#Default behaviour
+		if task_index == "": task_index = len(df)-1
+
+		description, category, carrots = find_task_by_index(task_index)
+		self.ids.input_description.text = description
+		self.ids.dropdown_category.text = category
+		self.ids.input_num.text = str(carrots)
+
+
+
+	#def replace_task(self):
 
 	pass
 
