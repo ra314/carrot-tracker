@@ -8,9 +8,6 @@ from datetime import timedelta
 from columnar import columnar
 
 
-#Nothing found message
-def nothing_found():
-	print("No tasks were found with the provided constraints.")
 
 #Import df
 def import_df():
@@ -24,6 +21,18 @@ df = import_df()
 def export_df(df):
 	export_location = '/home/ra314/All/Programming/carrots.csv'
 	df.to_csv(export_location, index = False, date_format='%d-%m-%Y %H:%M:%S')
+
+
+
+#Nothing found message
+def nothing_found():
+	print("No tasks were found with the provided constraints.")
+
+#Fill fields message
+def fill_fields():
+	print("Fill all required fields without default values.")
+
+
 
 #Get time and date, but only up to seconds
 def get_time_now():
@@ -119,12 +128,19 @@ def find_task_by_index(task_index):
 	slice = df.loc[task_index]
 	return slice[1], slice[2], slice[3]
 
-#Fucntion to edit previous task based on index and input
+#Function to edit previous task based on index and input
 def edit_task_by_index(df, category, description, carrots, task_index):
 	df.loc[task_index, 'Description'] = description
 	df.loc[task_index, 'Category'] = category
 	df.loc[task_index, 'Carrot'] = carrots
 	return
+
+#Function to autcomplete task
+def autocomplete_task(df, description):
+	bools = df['Description'].str.contains(description)
+	masked_df = df[bools]
+	last_slice = masked_df.iloc[-1]
+	return last_slice[1], last_slice[2], last_slice[3]
 
 
 
@@ -184,6 +200,11 @@ class MainWidget(GridLayout):
 		else:
 			return int(num)
 
+	def set_input_fields(self, category, description, carrots):
+		self.ids.input_description.text = description
+		self.ids.dropdown_category.text = category
+		self.ids.input_num.text = str(carrots)
+
 
 
 	### Functions called from Button
@@ -230,7 +251,9 @@ class MainWidget(GridLayout):
 		carrots = self.get_num()
 
 		#Preventing adding tasks without having filled all fields
-		if description == "" or carrots == "" or category == "": return
+		if description == "" or carrots == "" or category == "":
+			fill_fields()
+			return
 
 		add_task(df, category, description, carrots)
 
@@ -240,11 +263,7 @@ class MainWidget(GridLayout):
 		#Default behaviour
 		if task_index == "": task_index = len(df)-1
 
-		category, description, carrots = find_task_by_index(task_index)
-		self.ids.input_description.text = description
-		self.ids.dropdown_category.text = category
-		self.ids.input_num.text = str(carrots)
-
+		self.set_input_fields(*find_task_by_index(task_index))
 
 	def edit_task_by_index(self):
 		description = self.get_description()
@@ -256,10 +275,22 @@ class MainWidget(GridLayout):
 		if task_index == "": task_index = len(df)-1
 
 		#Preventing adding tasks without having filled all fields
-		if description == "" or carrots == "" or category == "" or task_index == "": return
+		if description == "" or carrots == "" or category == "" or task_index == "":
+			fill_fields()
+			return
 
 		### Editing task
 		edit_task_by_index(df, category, description, carrots, task_index)
+
+	def autocomplete_task(self):
+		description = self.get_description()
+
+		#Preventing searching for an empty string
+		if description == "":
+			fill_fields()
+			return
+
+		self.set_input_fields(*autocomplete_task(df, description))
 
 	pass
 

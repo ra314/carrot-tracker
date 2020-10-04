@@ -1,7 +1,7 @@
 <MainWidget>:
 
     cols: 3
-    rows: 4
+    rows: 5
 
     # Defining text input in .kv
     # And giving it the look . pos and features
@@ -12,7 +12,7 @@
     Spinner:
         id: dropdown_category
         text: 'Select category'
-        values: ('Programming', 'Statistics', 'Health', 'Cooking', 'Social', 'Nutrition', 'Cleaning', 'Maintenance', 'Study', 'Mental', 'Hygiene', 'Career')
+        values: ('Career', 'Cleaning', 'Cooking', 'Health', 'Hygiene', 'Maintenance', 'Mental', 'Nutrition', 'Programming', 'Social', 'Study')
         size_hint: 0.95, 0.5
         #on_value:
         #    print: "The spinner {} has text {}".format(self, self.value)
@@ -57,3 +57,12 @@
         text: 'Edit task \n(args = description, category, number, task index)'
         on_press: root.edit_task_by_index()
         size_hint: 0.95, 0.5
+    Button:
+        text: 'Autocomplete task \n(args = description)'
+        on_press: root.autocomplete_task()
+        size_hint: 0.95, 0.5
+    #Spinner:
+    #    id: dropdown_common_task
+    #    text: 'Select common task'
+    #    values: ('Brushing', 'Dishes', 'Shower', 'Shit', 'Run', 'Tomato Bath', 'Journal', 'Gratefulness Journal', 'Egg Burji', 'Woolies', 'Cleaned Bottles', 'Vacuumed House')
+    #    size_hint: 0.95, 0.5
