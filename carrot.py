@@ -119,6 +119,15 @@ def find_task_by_index(task_index):
 	slice = df.loc[task_index]
 	return slice[1], slice[2], slice[3]
 
+#Fucntion to edit previous task based on index and input
+def edit_task_by_index(df, category, description, carrots, task_index):
+	df.loc[task_index, 'Description'] = description
+	df.loc[task_index, 'Category'] = category
+	df.loc[task_index, 'Carrot'] = carrots
+	return
+
+
+
 ### Front end
 
 # Library imports
@@ -136,6 +145,7 @@ Window.size = (1000,1000)
 # This class stores the info of .kv file
 # when it is called goes to my.kv file
 class MainWidget(GridLayout):
+	### Functions to get values from text fields
 	def get_blacklisted_categories(self):
 		blacklisted_categories = self.ids.input_blacklist_categories.text
 		self.ids.input_blacklist_categories.text = ""
@@ -154,7 +164,7 @@ class MainWidget(GridLayout):
 	def get_category(self):
 		category = self.ids.dropdown_category.text
 		self.ids.dropdown_category.text = "Select Category"
-		return self.ids.dropdown_category.text
+		return category
 
 	def get_num(self):
 		num = self.ids.input_num.text
@@ -166,12 +176,14 @@ class MainWidget(GridLayout):
 
 	def get_task_index(self):
 		num = self.ids.input_task_index.text
-		self.ids.input_task_index.text = ""
 		if num == "":
 			return num
 		else:
 			return int(num)
 
+
+
+	### Functions called from Button
 	def print_tasks_on_day(self):
 		date = self.get_date()
 		restricted_categories = self.get_blacklisted_categories()
@@ -215,9 +227,7 @@ class MainWidget(GridLayout):
 		carrots = self.get_num()
 
 		#Preventing adding tasks without having filled all fields
-		if description == "": return
-		if carrots == "": return
-		if category == "Select Category": return
+		if description == "" or carrots == "" or category == "Select Category": return
 
 		add_task(df, category, description, carrots)
 
@@ -227,14 +237,26 @@ class MainWidget(GridLayout):
 		#Default behaviour
 		if task_index == "": task_index = len(df)-1
 
-		description, category, carrots = find_task_by_index(task_index)
+		category, description, carrots = find_task_by_index(task_index)
 		self.ids.input_description.text = description
 		self.ids.dropdown_category.text = category
 		self.ids.input_num.text = str(carrots)
 
 
+	def edit_task_by_index(self):
+		description = self.get_description()
+		category = self.get_category()
+		carrots = self.get_num()
+		task_index = self.get_task_index()
 
-	#def replace_task(self):
+		#Default behaviour
+		if task_index == "": task_index = len(df)-1
+
+		#Preventing adding tasks without having filled all fields
+		if description == "" or carrots == "" or category == "Select Category" or task_index == "": return
+
+		### Editing task
+		edit_task_by_index(df, category, description, carrots, task_index)
 
 	pass
 
