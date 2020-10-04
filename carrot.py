@@ -49,9 +49,7 @@ def add_task(df, category, description, carrot):
 	export_df(df)
 
 #Function to calculate XP gained in a day
-def xp_per_day(df, selected_date_str, restricted_categories):
-	selected_date = datetime.strptime(selected_date_str, '%d-%m-%Y')
-
+def xp_per_day(df, selected_date, restricted_categories):
 	date_bools = df['Date'].apply(lambda x: x.date() == selected_date.date())
 	category_bools = df['Category'].apply(lambda x: x not in restricted_categories)
 	aggregate_bools = np.array(date_bools) & np.array(category_bools)
@@ -86,16 +84,13 @@ def xp_in_last_x_days(df, x, restricted_categories):
 	headers = ['Date', 'Day', 'XP']
 	data = []
 	total_xp = 0
-
-	today_str = datetime.now().strftime('%d-%m-%Y')
-	today = datetime.strptime(today_str, '%d-%m-%Y')
+	today = datetime.now()
 
 	for i in range(x-1,-1,-1):
 		date = today-timedelta(days=i)
-		date_str = date.strftime('%d-%m-%Y')
 		#Prevents the loop from executing before the first date
 		if date<first_date: continue
-		xp = xp_per_day(df, date_str, restricted_categories)
+		xp = xp_per_day(df, date, restricted_categories)
 		total_xp += xp;
 		data.append([date, date.strftime('%A'), str(xp)])
 
