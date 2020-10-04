@@ -6,6 +6,7 @@ import numpy as np
 from datetime import datetime
 from datetime import timedelta
 from columnar import columnar
+from matplotlib import pyplot as plt
 
 
 
@@ -81,6 +82,7 @@ def last_x_tasks(df, description, category, x):
 
 #Function to calculate XP gained in last x days
 def xp_in_last_x_days(df, x, restricted_categories):
+	first_date = df.loc[0][0]
 	headers = ['Date', 'Day', 'XP']
 	data = []
 	total_xp = 0
@@ -89,11 +91,13 @@ def xp_in_last_x_days(df, x, restricted_categories):
 	today = datetime.strptime(today_str, '%d-%m-%Y')
 
 	for i in range(x-1,-1,-1):
-		date = (today-timedelta(days=i)).strftime('%d-%m-%Y')
-		xp = xp_per_day(df, date, restricted_categories)
+		date = today-timedelta(days=i)
+		date_str = date.strftime('%d-%m-%Y')
+		#Prevents the loop from executing before the first date
+		if date<first_date: continue
+		xp = xp_per_day(df, date_str, restricted_categories)
 		total_xp += xp;
-		day = datetime.strptime(date, '%d-%m-%Y')
-		data.append([date, day.strftime('%A'), str(xp)])
+		data.append([date, date.strftime('%A'), str(xp)])
 
 	if len(data) == 0:
 		nothing_found()
@@ -101,6 +105,11 @@ def xp_in_last_x_days(df, x, restricted_categories):
 
 	table = columnar(data, headers)
 	print(table)
+
+	plt.plot(np.flip(np.array(data)[:,2].astype(int)))
+	plt.xlabel("Days previous to today")
+	plt.ylabel("Carrots")
+	plt.show()
 
 	print(f"Fuck yeah you earned {total_xp}XP in the last {x} days!!!")
 
