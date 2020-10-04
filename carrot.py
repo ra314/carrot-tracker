@@ -59,7 +59,7 @@ def last_x_tasks(df, description, category, x):
 	else:
 		bools = df[['Description','Category']] == [description, category]
 
-	headers = ['Date', 'Description', 'Category', 'Carrot']
+	headers = ['Index', 'Date', 'Description', 'Category', 'Carrot']
 	tasks = df[headers][bools].dropna()[-x:]
 
 	if len(tasks) == 0:
@@ -98,7 +98,7 @@ def xp_in_last_x_days(df, x, restricted_categories):
 #Function to print tasks done on a certain day
 def print_tasks_on_day(df, selected_date_str, restricted_categories):
 	selected_date = datetime.strptime(selected_date_str, '%d-%m-%Y')
-	headers = ['Date', 'Description', 'Category', 'Carrot']
+	headers = ['Index', 'Date', 'Description', 'Category', 'Carrot']
 
 	date_bools = df['Date'].apply(lambda x: x.date() == selected_date.date())
 	category_bools = df['Category'].apply(lambda x: x not in restricted_categories)
@@ -163,8 +163,11 @@ class MainWidget(GridLayout):
 
 	def get_category(self):
 		category = self.ids.dropdown_category.text
-		self.ids.dropdown_category.text = "Select Category"
-		return category
+		self.ids.dropdown_category.text = "Select category"
+		if category == "Select category":
+			return ""
+		else:
+			return category
 
 	def get_num(self):
 		num = self.ids.input_num.text
@@ -227,7 +230,7 @@ class MainWidget(GridLayout):
 		carrots = self.get_num()
 
 		#Preventing adding tasks without having filled all fields
-		if description == "" or carrots == "" or category == "Select Category": return
+		if description == "" or carrots == "" or category == "": return
 
 		add_task(df, category, description, carrots)
 
@@ -253,7 +256,7 @@ class MainWidget(GridLayout):
 		if task_index == "": task_index = len(df)-1
 
 		#Preventing adding tasks without having filled all fields
-		if description == "" or carrots == "" or category == "Select Category" or task_index == "": return
+		if description == "" or carrots == "" or category == "" or task_index == "": return
 
 		### Editing task
 		edit_task_by_index(df, category, description, carrots, task_index)
