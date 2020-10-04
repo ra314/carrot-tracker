@@ -8,49 +8,44 @@
     TextInput:
         id: input_description
         hint_text:'Enter task description'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
         size_hint: 0.95, 0.5
-    TextInput:
-        id: input_category
-        hint_text:'Enter task category'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
+    Spinner:
+        id: dropdown_category
+        text: 'Select Category'
+        values: ('Programming', 'Statistics', 'Health', 'Cooking', 'Social', 'Nutrition', 'Cleaning', 'Maintenance', 'Study', 'Mental', 'Hygiene', 'Career')
         size_hint: 0.95, 0.5
+        #on_value:
+        #    print: "The spinner {} has text {}".format(self, self.value)
     TextInput:
         id: input_num
         hint_text:'Enter number (n)'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
         size_hint: 0.95, 0.5
     TextInput:
         id: input_date
         hint_text:'Enter date'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
         size_hint: 0.95, 0.5
     TextInput:
         id: input_blacklist_categories
         hint_text:'Enter blacklisted categories'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
         size_hint: 0.95, 0.5
     TextInput:
         id: input_carrots
         hint_text:'N/A'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.705}
         size_hint: 0.95, 0.5
 
     Button:
         text: 'Add task \n (args = description, category, date, n = carrots)'
         on_press: root.add_task()
+        size_hint: 0.95, 0.5
     Button:
         text: 'Tasks done on date \n (args = date) \n (default date is today)'
         on_press: root.print_tasks_on_day()
+        size_hint: 0.95, 0.5
     Button:
         text: 'XP earned in last n days \n (args = number) \n (default n = 7)'
         on_press: root.xp_in_last_x_days()
+        size_hint: 0.95, 0.5
     Button:
         text: 'Last n tasks \n (args = description, category, number) \n (default n = 7)'
         on_press: root.last_x_tasks()
-
-    Spinner:
-        text: 'Category'
-        values: 'Hygiene', 'Cleaning', 'Study', 'Nutrition'
-        #on_value:
-        #    print: "The spinner {} has text {}".format(self, self.value)
+        size_hint: 0.95, 0.5

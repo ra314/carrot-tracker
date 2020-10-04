@@ -7,6 +7,7 @@ from datetime import datetime
 from datetime import timedelta
 from columnar import columnar
 
+
 #Nothing found message
 def nothing_found():
 	print("No tasks were found with the provided constraints.")
@@ -146,9 +147,8 @@ class MainWidget(GridLayout):
 		return description
 
 	def get_category(self):
-		category = self.ids.input_category.text
-		self.ids.input_category.text = ""
-		return category
+		self.ids.dropdown_category.text = "Select Category"
+		return self.ids.dropdown_category.text
 
 	def get_num(self):
 		num_tasks = self.ids.input_num.text
@@ -196,6 +196,10 @@ class MainWidget(GridLayout):
 		description = self.get_description()
 		category = self.get_category()
 		carrots = self.get_num()
+
+		#Preventing adding tasks without having filled all fields
+		if False in (description, category, carrots): return
+		if category = "Select Category": return
 
 		add_task(df, category, description, carrots)
 
