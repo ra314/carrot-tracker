@@ -1,4 +1,5 @@
 # carrot-tracker
+The name is based on the old metaphor of the carrot vs the stick.
 
 # Roadmap
 | Task                                                       | Status      |

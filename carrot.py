@@ -44,7 +44,7 @@ def get_time_now():
 #Adding Tasks
 def add_task(df, category, description, carrot):
 	now = get_time_now()
-	df.loc[len(df)] = [now, category, description, carrot]
+	df.loc[len(df)] = [now, category, description, carrot, len(df)]
 	print(f"\nYou've earned {carrot}XP")
 	export_df(df)
 
@@ -100,19 +100,16 @@ def xp_in_last_x_days(df, x, restricted_categories):
 
 	table = columnar(data, headers)
 	print(table)
+	print(f"Fuck yeah you earned {total_xp}XP in the last {x} days!!!")
 
 	plt.plot(np.flip(np.array(data)[:,2].astype(int)))
 	plt.xlabel("Days previous to today")
 	plt.ylabel("Carrots")
 	plt.show()
 
-	print(f"Fuck yeah you earned {total_xp}XP in the last {x} days!!!")
-
 #Function to print tasks done on a certain day
-def print_tasks_on_day(df, selected_date_str, restricted_categories):
-	selected_date = datetime.strptime(selected_date_str, '%d-%m-%Y')
+def print_tasks_on_day(df, selected_date, restricted_categories):
 	headers = ['Index', 'Date', 'Description', 'Category', 'Carrot']
-
 	date_bools = df['Date'].apply(lambda x: x.date() == selected_date.date())
 	category_bools = df['Category'].apply(lambda x: x not in restricted_categories)
 	aggregate_bools = np.array(date_bools) & np.array(category_bools)
@@ -124,8 +121,10 @@ def print_tasks_on_day(df, selected_date_str, restricted_categories):
 
 	total_xp = masked_df['Carrot'].sum()
 	table = columnar(masked_df.values.tolist(), headers, terminal_width=100)
-	print("On " + selected_date_str + " you earned " + str(total_xp) + "XP")
+
 	print(table)
+	selected_date_str = str(selected_date.date())
+	print("On " + selected_date_str + " you earned " + str(total_xp) + "XP")
 
 #Function to find a task by index
 def find_task_by_index(task_index):
@@ -214,12 +213,15 @@ class MainWidget(GridLayout):
 	### Functions called from Button
 	def print_tasks_on_day(self):
 		date = self.get_date()
+		num_days = self.get_num()
 		restricted_categories = self.get_blacklisted_categories()
 		restricted_categories = restricted_categories.replace(" ","").split(",")
 
 		#Default Behaviour
-		if date == "":
-			date = datetime.now().strftime('%d-%m-%Y')
+		#if date == "" and num_days == "": date = datetime.now().strftime('%d-%m-%Y')
+		#if date == "" and num_days != "": date = (datetime.now()-timedelta(num_days)).strftime('%d-%m-%Y')
+		if date == "" and num_days == "": date = datetime.now()
+		if date == "" and num_days != "": date = datetime.now()-timedelta(num_days)
 
 		print_tasks_on_day(df, date, restricted_categories)
 
