@@ -92,7 +92,7 @@ def xp_in_last_x_days(df, x, restricted_categories):
 		if date<first_date: continue
 		xp = xp_per_day(df, date, restricted_categories)
 		total_xp += xp;
-		data.append([date, date.strftime('%A'), str(xp)])
+		data.append([date.strftime('%d-%m-%Y'), date.strftime('%A'), str(xp)])
 
 	if len(data) == 0:
 		nothing_found()
@@ -102,7 +102,7 @@ def xp_in_last_x_days(df, x, restricted_categories):
 	print(table)
 	print(f"Fuck yeah you earned {total_xp}XP in the last {x} days!!!")
 
-	plt.plot(np.flip(np.array(data)[:,2].astype(int)))
+	plt.plot(np.flip(np.array(data)[:,2].astype(int)), marker = 'o')
 	plt.xlabel("Days previous to today")
 	plt.ylabel("Carrots")
 	plt.show()
