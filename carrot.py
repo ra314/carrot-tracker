@@ -142,6 +142,11 @@ def edit_task_by_index(df, category, description, carrots, task_index):
 def autocomplete_task(df, description):
 	bools = df['Description'].str.contains(description)
 	masked_df = df[bools]
+
+	if len(masked_df) == 0:
+		nothing_found()
+		return "", "", ""
+
 	last_slice = masked_df.iloc[-1]
 	return last_slice[1], last_slice[2], last_slice[3]
 
