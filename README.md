@@ -1,6 +1,13 @@
 # carrot-tracker
 The name is based on the old metaphor of the carrot vs the stick.
 
+This application was made during a time of my life where I thought I was rather unproductive. Using the application allowed me to concretely keep track of all the tasks I accomplished in a day and let me see that I was more productive than I thought. Keeping track of productivity over a long time period motivated me to improve it.
+
+If you want to run this program you need to change the location of the CSV the program uses and populate the CSV with the headers Date, Category, Description, Carrot, Index. Also this application was written after I'd started a excel document to keep track of my tasks. So some comforts are missing, like adding categories.
+
+# UI Example
+![Screenshot from 2021-07-21 16-18-39](https://user-images.githubusercontent.com/55324331/126440714-cfe5e269-6dab-4e3d-b71b-0d34cade3776.png)
+
 # Roadmap
 | Task                                                       | Status      |
 |:-----------------------------------------------------------|:------------|
